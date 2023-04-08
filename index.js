@@ -2,6 +2,7 @@ const connect = require('./db');
 const express = require('express')
 // const fileUpload = require('express-fileupload')
 const bodyParser = require('body-parser');
+const PORT = process.env.PORT || 5000
 
 connect();
 
@@ -28,4 +29,4 @@ app.use('/',require('./routes/product'))
 
 
 
-app.listen(5000,()=>{console.log(`app listening at http://localhost:5000`)})
+app.listen(PORT,()=>{console.log(`app listening at http://localhost:5000`)})
