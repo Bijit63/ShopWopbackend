@@ -76,6 +76,46 @@ router.post('/signup',
 
 
 
+        //------------------------------------------------------------------------------
+    // authenticating a user using OTPLESS POST request ( SIGNIN )  --> No signin required
+
+    router.post('/buyerotpless' ,[body('email').isEmail()]
+    ,
+    async (req,res)=>{
+
+      const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ error : errors.array() });
+    }
+
+    const {email} = req.body;
+
+        const user = await User.findOne({email})
+        if(!user)
+        {
+          return res.status(400).json({error:"User is not registered"})
+
+        }
+
+        try {
+          const data = {
+            user:{id:user.id}
+          }
+          const authtoken=jwt.sign(data,JWT_CODE)
+    
+          res.json({buyer:true,"authtoken":authtoken,type:"buyer"})
+
+          
+        } catch (error) {
+          res.status(500).json({error:"Internal server Error"});
+        }
+
+
+    }
+     )
+
+
+
 
 
     
@@ -275,6 +315,46 @@ router.post('/sellersignup',
 
 
 
+
+
+      
+    //------------------------------------------------------------------------------
+    // authenticating a seller using OTPLESS POST request ( SIGNIN )  --> No signin required
+
+    router.post('/sellerotpless' ,[body('email').isEmail()]
+    ,
+    async (req,res)=>{
+
+      const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ error : errors.array() });
+    }
+
+    const {email} = req.body;
+
+        const seller = await Userseller.findOne({email})
+        if(!seller)
+        {
+          return res.status(400).json({error:"User is not registered"})
+
+        }
+
+        try {
+          const data = {
+            user:{id:seller.id}
+          }
+          const authtoken=jwt.sign(data,JWT_CODE)
+    
+          res.json({seller:true,"authtoken":authtoken,type:"seller"})
+
+          
+        } catch (error) {
+          res.status(500).json({error:"Internal server Error"});
+        }
+
+
+    }
+     )
 
 
 
