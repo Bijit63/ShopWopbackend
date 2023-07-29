@@ -299,7 +299,7 @@ router.post('/api/payment', async (req, res) => {
   
   try {
     const options = {
-      amount: amount , // Amount in paise (Rupees x 100)
+      amount: amount *100, // Amount in paise (Rupees x 100)
       currency,
       payment_capture: 1, // Auto-capture payments
     };
