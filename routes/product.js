@@ -5,6 +5,7 @@ const fetchuser = require('../middleware/fetchuser')
 const { body, validationResult } = require('express-validator');
 const cloudinary = require('cloudinary').v2;
 const User = require('../models/User')
+const Razorpay = require('razorpay');
 
 
 
@@ -13,6 +14,11 @@ cloudinary.config({
     cloud_name: "dfstphpp1",
     api_key: "198111167712288",
     api_secret: "FcGoXNVK8c51bDMaqgRkWcTL1Fc"
+  });
+
+  const razorpay = new Razorpay({
+    key_id: 'rzp_test_00T0VpQOBI8bw9',
+    key_secret: 'stUVtAp0VPGb5KJrPswTgV5T',
   });
 
 
@@ -281,6 +287,34 @@ router.get('/products/search', async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+
+
+
+
+// RAZORPAY 
+
+router.post('/api/payment', async (req, res) => {
+  const { amount, currency } = req.body;
+  
+  try {
+    const options = {
+      amount: amount , // Amount in paise (Rupees x 100)
+      currency,
+      payment_capture: 1, // Auto-capture payments
+    };
+    
+    const response = await razorpay.orders.create(options);
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to create Razorpay order' });
+  }
+});
+
+// RAZORPAY 
+
+
 
 
     module.exports = router
